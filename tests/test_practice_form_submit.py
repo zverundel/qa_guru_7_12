@@ -1,4 +1,3 @@
-import allure
 from qa_guru_7_12.data import users
 from qa_guru_7_12.pages.registration_page import RegistrationPage
 
