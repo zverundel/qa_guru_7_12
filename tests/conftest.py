@@ -1,5 +1,4 @@
 import pytest
-
 from selene import browser
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -39,5 +38,5 @@ def setup_browser():
 @pytest.fixture(scope='function', autouse=True)
 def open_new_browser(setup_browser):
     browser.config.base_url = 'https://demoqa.com'
-    browser.config.window_width = 1920
-    browser.config.window_height = 1080
+    browser.config.window_width = 3440
+    browser.config.window_height = 1440
