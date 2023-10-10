@@ -6,9 +6,7 @@ from allure_commons.types import Severity
 
 @allure.tag('Web')
 @allure.severity(Severity.CRITICAL)
-@allure.label('owner', 'Evgenii Li')
-@allure.feature('Registration form')
-@allure.story('Assert registered user')
+@allure.label('owner', 'Zverev Daniil')
 @allure.link('https://demoqa.com/automation-practice-form')
 def test_successful_student_registration_form():
     registration_page = RegistrationPage()
