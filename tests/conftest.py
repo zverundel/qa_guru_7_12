@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from selenium import webdriver
 from selene import browser
 
-from demoqa_tests.utils import attach
+from utils import attach
 
 
 options = webdriver.ChromeOptions()
