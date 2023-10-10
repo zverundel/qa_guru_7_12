@@ -2,7 +2,7 @@ from qa_guru_7_12.data import users
 from qa_guru_7_12.pages.registration_page import RegistrationPage
 
 
-def test_successful_student_registration_form(browser_open_url):
+def test_successful_student_registration_form():
     registration_page = RegistrationPage()
 
     registration_page.open()
