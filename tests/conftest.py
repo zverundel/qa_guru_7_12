@@ -1,61 +1,43 @@
-import os
 import pytest
 
-from dotenv import load_dotenv
-from selenium import webdriver
 from selene import browser
-
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 from utils import attach
 
 
-options = webdriver.ChromeOptions()
-
-
-def pytest_addoption(parser):
-    parser.addoption(
-        '--browser_url'
+@pytest.fixture(scope='function')
+def setup_browser():
+    browser_version = "100.0"
+    options = Options()
+    selenoid_capabilities = {
+        "browserName": "chrome",
+        "browserVersion": browser_version,
+        "selenoid:options": {
+            "enableVNC": True,
+            "enableVideo": True
+        }
+    }
+    options.capabilities.update(selenoid_capabilities)
+    driver = webdriver.Remote(
+        command_executor=f"https://user1:1234@selenoid.autotests.cloud/wd/hub",
+        options=options
     )
 
-
-@pytest.fixture(scope='session', autouse=True)
-def load_env():
-    load_dotenv()
-
-
-@pytest.fixture(scope='function', autouse=True)
-def browser_opt(request):
-    options.add_argument('window-size=2560,1440')
-    browser.config.base_url = 'https://demoqa.com'
-
-    browser_url = request.config.getoption('--browser_url')
-
-    if browser_url is not None:
-        login = os.getenv('LOGIN')
-        password = os.getenv('PASSWORD')
-
-        selenoid_capabilities = {
-            "browserName": "chrome",
-            "browserVersion": '100.0',
-            "selenoid:options": {
-                "enableVNC": True,
-                "enableVideo": True
-            }
-        }
-
-        options.capabilities.update(selenoid_capabilities)
-
-        browser.config.driver = webdriver.Remote(
-            command_executor=f'https://{login}:{password}@{browser_url}',
-            options=options
-        )
-    else:
-        browser.config.driver_options = options
+    browser.config.driver = driver
 
     yield browser
 
     attach.add_screenshot(browser)
-    attach.add_logs(browser)
     attach.add_html(browser)
+    attach.add_logs(browser)
     attach.add_video(browser)
 
     browser.quit()
+
+
+@pytest.fixture(scope='function', autouse=True)
+def open_new_browser(setup_browser):
+    browser.config.base_url = 'https://demoqa.com'
+    browser.config.window_width = 1920
+    browser.config.window_height = 1080
